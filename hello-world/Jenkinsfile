@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials') // Docker Hub credentials
+        DOCKER_IMAGE = 'africatech007@gmail.com/hello-world' // Docker image name
+        DOCKER_TAG = 'latest' // Docker image tag
+    }
+
+    stages {
+        // Stage 1: Checkout code from GitHub
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kellymigap/devops-projects.git'
+            }
+        }
+
+        // Stage 2: Build the Java application using Maven
+        stage('Build') {
+            steps {
+                sh 'mvn clean package -f hello-world/pom.xml'
+            }
+        }
+
+        // Stage 3: Build the Docker image
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", "hello-world")
+                }
+            }
+        }
+
+        // Stage 4: Push the Docker image to Docker Hub
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    }
+                }
+            }
+        }
+    }
+}
