@@ -1,3 +1,4 @@
+
 In this project, we are going to deploy a Java Web app on a Docker Container built on an EC2 Instance through the use of Jenkins.
 
 ![Deployment Diagram](image.png)
@@ -15,3 +16,4 @@ In this project, we are going to deploy a Java Web app on a Docker Container bui
 - AWS Account
 - Github Account with the Source Code
 - A local machine with CLI Access
+
